@@ -1,0 +1,21 @@
+SystemPrompt : "You are ErrorDebuggingGPT. Your sole purpose in this world is to help software engineers by diagnosing software system errors and bugs that can occur in any type of computer system. With this role, users will submit a set of log messages to you for analisis and diagnostis. You will serve them with the best of your ability giving as much context and details as possible. Focus specifically on the very last log lines as those are the one triggering the diagnosis event."
+prompt: "The message following the first line containing \"ERROR:\" up until the end of the prompt is a computer error no more and no less. It is your job to try to diagnose and fix what went wrong. Ready?\nERROR:\n$ERROR"
+parsers:
+  # Android parser
+  - regex: '^(?P<DATE>\d{2}-\d{2})\s(?P<TIME>\d{2}:\d{2}:\d{2}.\d{3})\s+(?P<PID>\d+)\s+(?P<TID>\d+)\s+(?P<LEVEL>[A-Z])\s+(?P<TAG>[^:]+):\s(?P<MESSAGE>.+)$'
+  # Apache parser
+  - regex: '^\[(?P<DATE>\w{3} \w{3} \d{2} \d{2}:\d{2}:\d{2} \d{4})\] \[(?P<SEVERITY>\w+)\] (?P<MESSAGE>.*)$'
+  # HDFS parser 
+  - regex: '^(?P<DATE>\d{6})\s(?P<TIME>\d{6})\s(?P<PID>\d+)\s(?P<LEVEL>\w+)\s(?P<CLASS>[^\s]+):\s(?P<MESSAGE>.*)$'
+  # Hadoop parser 
+  - regex: '^(?P<TIMESTAMP>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3})\s+(?P<LEVEL>[A-Z]+)\s+\[(?P<THREAD>[^\]]+)\] (?P<CLASS>[^:]+): (?P<MESSAGE>.+)$'
+  # Linux parser 
+  - regex: '^(?P<DATE>[A-Z][a-z]{2}\s+\d{1,2})\s+(?P<TIME>\d{2}:\d{2}:\d{2})\s+(?P<HOST>\S+)\s+(?P<PROCESS>[^:]+)(\[(?P<PID>\d+)\])?:\s+(?P<MESSAGE>.+)$'
+  # Mac parser
+  - regex: '^(?P<MONTH>[A-Z][a-z]{2})\s+(?P<DAY>\d{1,2})\s(?P<TIME>(?:\d{2}:){2}\d{2})\s(?P<HOST>[^\s]+)\s(?P<PROCESS>[^\[]+)\[(?P<PID>\d+)\]:?(?:\s\((?P<PID2>\d+)\))?:?\s(?P<MESSAGE>.*)$'
+  # Spark parser 
+  - regex: '^(?P<DATE>\d{2}\/\d{2}\/\d{2}) (?P<TIME>\d{2}:\d{2}:\d{2}) (?P<LEVEL>[A-Z]+) (?P<CLASS>[a-zA-Z0-9\.]+): (?P<MESSAGE>.+)$'
+  # Windows parser
+  - regex: '^(?P<DATE>\d{4}-\d{2}-\d{2}) (?P<TIME>\d{2}:\d{2}:\d{2}),\s+(?P<LEVEL>[A-Z][a-z]+)\s+(?P<CLASS>[A-Za-z]+)\s+(?P<MESSAGE>.*)$'
+  # Universal parser
+  - regex: '^(?P<MESSAGE>.*)$'
